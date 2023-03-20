@@ -28,12 +28,11 @@ class MainControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("/home 요청에 home request 반환")
+    @DisplayName("/ 요청에 질문 목록 페이지로 redirect")
     void test1() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/home")
+        mockMvc.perform(MockMvcRequestBuilders.get("/")
                         .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("home request"))
+                .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
 
