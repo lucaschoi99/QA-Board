@@ -1,0 +1,23 @@
+server:
+  port: 8011
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    generate-ddl: true
+    show-sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/board
+    username: root
+    password: motica99
+
+  sql:
+    init:
+      mode: always
+
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+
