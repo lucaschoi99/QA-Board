@@ -23,4 +23,12 @@ public class QuestionService {
                 .orElseThrow(DataNotFoundException::new);
     }
 
+    public void createQuestion(String title, String content) {
+        Question question = Question.builder()
+                .title(title)
+                .content(content)
+                .build();
+        questionRepository.save(question);
+    }
+
 }
