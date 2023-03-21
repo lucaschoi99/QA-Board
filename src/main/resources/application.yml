@@ -18,6 +18,5 @@ spring:
   sql:
     init:
       mode: always
-
-#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
-
+  profiles:
+    active: dev
