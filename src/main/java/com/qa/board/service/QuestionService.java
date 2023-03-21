@@ -1,6 +1,7 @@
 package com.qa.board.service;
 
 import com.qa.board.domain.Question;
+import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,11 @@ public class QuestionService {
 
     public List<Question> findQuestions() {
         return questionRepository.findAll();
+    }
+
+    public Question getQuestion(Long id) {
+        return questionRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
     }
 
 }
