@@ -6,6 +6,7 @@ import com.qa.board.form.QuestionForm;
 import com.qa.board.service.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,9 +24,9 @@ public class QuestionController {
     // TODO: Controller에서 모두 직접 엔티티 받지 말고 DTO 클래스 만들어 수행.
 
     @GetMapping("/list")
-    public String getList(Model model) {
-        List<Question> questions = questionService.findQuestions();
-        model.addAttribute("questionList", questions);
+    public String getList(Model model, @RequestParam(defaultValue = "0") int page) {
+        Page<Question> paged = questionService.findQuestions(page);
+        model.addAttribute("paged", paged);
         return "questionList";
     }
 

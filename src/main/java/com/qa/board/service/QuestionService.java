@@ -4,6 +4,8 @@ import com.qa.board.domain.Question;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +16,9 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public List<Question> findQuestions() {
-        return questionRepository.findAll();
+    public Page<Question> findQuestions(int page) {
+        PageRequest pageable = PageRequest.of(page, 10);
+        return questionRepository.findAll(pageable);
     }
 
     public Question getQuestion(Long id) {
