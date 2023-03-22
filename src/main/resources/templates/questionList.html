@@ -18,11 +18,34 @@
             </td>
             <td th:text="${#temporals.format(question.createdDate, 'yyyy/M/d HH:mm')}"></td>
         </tr>
-        <tr th:if="${#lists.isEmpty(questionList)}">
+        <tr th:if="${#lists.isEmpty(paged)}">
             <td colspan="2">등록된 질문이 없어요 🤨</td>
         </tr>
         </tbody>
     </table>
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!paged.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paged.hasPrevious} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|?page=${paged.number-1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(0, paged.totalPages-1)}"
+                th:if="${page >= paged.number-2 and page <= paged.number+2}"
+                th:classappend="${page == paged.number} ? 'active'"
+                class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!paged.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paged.number+1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
     <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
 </div>
 </html>
