@@ -26,23 +26,25 @@
     <!-- 페이징처리 시작 -->
     <div th:if="${!paged.isEmpty()}">
         <ul class="pagination justify-content-center">
+            <li th:if="${paged.hasPrevious()}"><a class="page-link" th:href="@{|?page=0|}">처음</a></li>
             <li class="page-item" th:classappend="${!paged.hasPrevious} ? 'disabled'">
                 <a class="page-link"
                    th:href="@{|?page=${paged.number-1}|}">
                     <span>이전</span>
                 </a>
             </li>
-            <li th:each="page: ${#numbers.sequence(0, paged.totalPages-1)}"
-                th:if="${page >= paged.number-2 and page <= paged.number+2}"
-                th:classappend="${page == paged.number} ? 'active'"
+            <li th:each="page: ${#numbers.sequence(paged.number - 2, paged.number + 2)}"
+                th:class="${page == paged.number} ? active : ''"
                 class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                <a th:if="${page >= 0 and page < paged.totalPages}"
+                   th:href="@{|?page=${page}|}" th:text="${page}" class="page-link"></a>
             </li>
             <li class="page-item" th:classappend="${!paged.hasNext} ? 'disabled'">
                 <a class="page-link" th:href="@{|?page=${paged.number+1}|}">
                     <span>다음</span>
                 </a>
             </li>
+            <li th:if="${paged.hasNext()}"><a class="page-link" th:href="@{|?page=${paged.totalPages - 1}|}">마지막</a></li>
         </ul>
     </div>
     <!-- 페이징처리 끝 -->
