@@ -18,8 +18,8 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public Page<Question> findQuestions(int page) {
-        PageRequest pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+    public Page<Question> findQuestions(int page, int pageSize) {
+        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("createdDate")));
         return questionRepository.findAll(pageable);
     }
 
