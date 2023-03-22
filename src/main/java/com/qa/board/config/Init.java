@@ -12,22 +12,14 @@ import org.springframework.context.annotation.Profile;
 // Init : 개발환경이 이거나, 테스트환경일 때만 실행
 public class Init {
     @Bean
-    public CommandLineRunner initData(QuestionRepository questionRepository) {
+    public CommandLineRunner initData(QuestionService questionService) {
         return args -> {
             // 이 부분은 스프링부트 앱이 실행되고, 본격적으로 작동하기 전에 실행된다.
-            Question question1 = Question.builder()
-                    .title("T1")
-                    .content("C1")
-                    .build();
-
-            Question question2 = Question.builder()
-                    .title("T2")
-                    .content("C2")
-                    .build();
-
-            questionRepository.save(question1);
-            questionRepository.save(question2);
-
+            for (int i = 1; i <= 300; i++) {
+                String title = "[제목] - " + i;
+                String content = "[내용] - " + i;
+                questionService.createQuestion(title, content);
+            }
         };
     }
 }
