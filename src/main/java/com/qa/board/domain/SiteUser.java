@@ -3,11 +3,13 @@ package com.qa.board.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class SiteUser {
 
     @Id
