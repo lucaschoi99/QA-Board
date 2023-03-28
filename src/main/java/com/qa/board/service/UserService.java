@@ -1,6 +1,7 @@
 package com.qa.board.service;
 
 import com.qa.board.domain.SiteUser;
+import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.UserCreateForm;
 import com.qa.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,10 @@ public class UserService {
                 .build());
     }
 
-
+    public SiteUser getUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new DataNotFoundException("사용자가 존재하지 않습니다."));
+    }
 
 
 }
