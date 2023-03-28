@@ -1,9 +1,11 @@
 package com.qa.board.controller;
 
 import com.qa.board.domain.Question;
+import com.qa.board.domain.SiteUser;
 import com.qa.board.form.AnswerForm;
 import com.qa.board.form.QuestionForm;
 import com.qa.board.service.QuestionService;
+import com.qa.board.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -20,8 +23,7 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
-
-    // TODO: Controller에서 모두 직접 엔티티 받지 말고 DTO 클래스 만들어 수행.
+    private final UserService userService;
 
     @GetMapping("/list")
     public String getList(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -45,11 +47,14 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String createQuestion(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public String createQuestion(@Valid QuestionForm questionForm, BindingResult bindingResult,
+                                 Principal principal) {
         if (bindingResult.hasErrors()) {
             return "questionForm";
         }
-        questionService.createQuestion(questionForm.getTitle(), questionForm.getContent());
+        // TODO: 로그인 안한 사용자의 경우 질문 등록 버튼 안보이게, 또는 로직으로 막기
+        SiteUser user = userService.getUser(principal.getName());
+        questionService.createQuestion(questionForm.getTitle(), questionForm.getContent(), user);
         return "redirect:/";
     }
 
