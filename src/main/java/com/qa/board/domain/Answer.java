@@ -2,10 +2,7 @@ package com.qa.board.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +15,7 @@ import static jakarta.persistence.GenerationType.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Answer {
 
@@ -29,8 +27,11 @@ public class Answer {
     private Question question;
 
     @Column(columnDefinition = "TEXT")
-    @NotBlank // TODO: NotBlank Exception 만들기
+    @NotBlank
     private String content;
+
+    @ManyToOne
+    private SiteUser author;
 
     @CreatedDate
     private LocalDateTime createdDate;
@@ -38,11 +39,10 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime lastModified;
 
-    public void setQuestion(Question question) {
+    @Builder
+    public Answer(Question question, String content, SiteUser author) {
         this.question = question;
-    }
-
-    public void setContent(String content) {
         this.content = content;
+        this.author = author;
     }
 }

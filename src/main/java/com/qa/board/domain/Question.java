@@ -18,6 +18,7 @@ import static jakarta.persistence.GenerationType.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Question {
 
@@ -36,6 +37,9 @@ public class Question {
     @NotBlank // TODO: NotBlank Exception 만들기
     private String content;
 
+    @ManyToOne
+    private SiteUser author;
+
     @CreatedDate
     private LocalDateTime createdDate;
 
@@ -43,9 +47,9 @@ public class Question {
     private LocalDateTime lastModified;
 
     @Builder
-    public Question(String title, String content) {
+    public Question(String title, String content, SiteUser author) {
         this.title = title;
         this.content = content;
+        this.author = author;
     }
-
 }
