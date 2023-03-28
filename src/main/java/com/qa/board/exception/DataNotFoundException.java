@@ -9,9 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 public class DataNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    private static final String MESSAGE = "존재하지 않는 질문입니다";
-
-    public DataNotFoundException() {
-        super(MESSAGE);
+    public DataNotFoundException(String message) {
+        super(message);
     }
 }
