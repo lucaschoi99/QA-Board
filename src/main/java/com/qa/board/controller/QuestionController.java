@@ -9,6 +9,7 @@ import com.qa.board.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,13 +47,13 @@ public class QuestionController {
         return "questionForm";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String createQuestion(@Valid QuestionForm questionForm, BindingResult bindingResult,
                                  Principal principal) {
         if (bindingResult.hasErrors()) {
             return "questionForm";
         }
-        // TODO: 로그인 안한 사용자의 경우 질문 등록 버튼 안보이게, 또는 로직으로 막기
         SiteUser user = userService.getUser(principal.getName());
         questionService.createQuestion(questionForm.getTitle(), questionForm.getContent(), user);
         return "redirect:/";
