@@ -1,6 +1,7 @@
 package com.qa.board.service;
 
 import com.qa.board.domain.Question;
+import com.qa.board.domain.SiteUser;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +26,15 @@ public class QuestionService {
 
     public Question getQuestion(Long id) {
         return questionRepository.findById(id)
-                .orElseThrow(DataNotFoundException::new);
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 질문입니다"));
     }
 
-    public void createQuestion(String title, String content) {
-        Question question = Question.builder()
+    public void createQuestion(String title, String content, SiteUser author) {
+        questionRepository.save(Question.builder()
                 .title(title)
                 .content(content)
-                .build();
-        questionRepository.save(question);
+                .author(author)
+                .build());
     }
 
 }
