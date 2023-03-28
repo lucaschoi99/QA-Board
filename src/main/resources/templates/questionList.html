@@ -6,7 +6,8 @@
         <thead class="table-dark">
         <tr>
             <th>#</th>
-            <th>제목</th>
+            <th style="width:50%">제목</th>
+            <th>작성자</th>
             <th>작성일시</th>
         </tr>
         </thead>
@@ -19,6 +20,10 @@
                       th:if="${#lists.size(question.answerList) >= 0}"
                       th:text="@{|${#lists.size(question.answerList)} 개의 답변|}">
                 </span>
+            </td>
+            <td>
+                <span th:if="${question.author != null}" th:text="${question.author.username}"></span>
+                <span th:unless="${question.author != null}" th:text="알수없음"></span>
             </td>
             <td th:text="${#temporals.format(question.createdDate, 'yyyy/M/d HH:mm')}"></td>
         </tr>
