@@ -1,5 +1,6 @@
 package com.qa.board.config;
 import com.qa.board.domain.Question;
+import com.qa.board.domain.SiteUser;
 import com.qa.board.repository.QuestionRepository;
 import com.qa.board.service.QuestionService;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +19,7 @@ public class Init {
             for (int i = 1; i <= 300; i++) {
                 String title = "[제목] - " + i;
                 String content = "[내용] - " + i;
-                questionService.createQuestion(title, content);
+                questionService.createQuestion(title, content, null);
             }
         };
     }
