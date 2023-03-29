@@ -25,8 +25,8 @@
                 </div>
             </div>
             <div class="my-3">
-                <a th:href="@{|/question/likes/${question.id}|}" class="recommend btn btn-sm btn-outline-secondary">
-                    좋아요
+                <a th:href="@{|/question/likes/${question.id}|}" class="btn btn-sm btn-outline-secondary">
+                    추천
                     <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.questionLikes)}"></span>
                 </a>
                 <a th:href="@{|/question/edit/${question.id}|}" class="btn btn-sm btn-outline-secondary"
@@ -62,6 +62,10 @@
                 </div>
             </div>
             <div class="my-3">
+                <a th:href="@{|/answer/likes/${answer.id}|}" class="btn btn-sm btn-outline-secondary">
+                    좋아요
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.answerLikes)}"></span>
+                </a>
                 <a th:href="@{|/answer/edit/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
