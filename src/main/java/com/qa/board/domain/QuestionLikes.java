@@ -23,11 +23,11 @@ public class QuestionLikes {
     @Column(name = "question_likes_id")
     private Long id;
 
-    @ManyToOne
-    private Question likesQuestion;
+    @ManyToOne(fetch = LAZY)
+    private Question question;
 
-    @ManyToOne
-    private SiteUser likesUser;
+    @ManyToOne(fetch = LAZY)
+    private SiteUser user;
 
     // 생성 메서드
     public static QuestionLikes create(Question question, SiteUser user) {

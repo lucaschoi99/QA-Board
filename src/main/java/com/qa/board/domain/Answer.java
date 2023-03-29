@@ -35,7 +35,7 @@ public class Answer {
     @ManyToOne
     private SiteUser author;
 
-    @OneToMany(mappedBy = "likesAnswer")
+    @OneToMany(mappedBy = "answer")
     private Set<AnswerLikes> answerLikes = new LinkedHashSet<>();
 
     @CreatedDate
@@ -58,6 +58,6 @@ public class Answer {
     // 연관관계 메서드
     public void addLikes(AnswerLikes answerLikes) {
         this.answerLikes.add(answerLikes);
-        answerLikes.setLikesAnswer(this);
+        answerLikes.setAnswer(this);
     }
 }
