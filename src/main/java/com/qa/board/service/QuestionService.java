@@ -1,15 +1,18 @@
 package com.qa.board.service;
 
 import com.qa.board.domain.Question;
+import com.qa.board.domain.QuestionLikes;
 import com.qa.board.domain.SiteUser;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.QuestionEdit;
 import com.qa.board.repository.QuestionRepository;
+import com.qa.board.repository.QuestionUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final QuestionUserRepository questionUserRepository;
 
     public Page<Question> findQuestions(int page, int pageSize) {
         PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("createdDate")));
@@ -45,5 +49,11 @@ public class QuestionService {
 
     public void delete(Question question) {
         questionRepository.delete(question);
+    }
+
+    @Transactional
+    public void addLikes(Question question, SiteUser user) {
+        QuestionLikes questionLikes = QuestionLikes.create(question, user);
+        questionUserRepository.save(questionLikes);
     }
 }

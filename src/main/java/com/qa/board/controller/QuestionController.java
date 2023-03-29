@@ -104,6 +104,16 @@ public class QuestionController {
         return "redirect:/";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/likes/{id}")
+    public String questionLikes(Principal principal, @PathVariable Long id) {
+        Question question = questionService.getQuestion(id);
+        SiteUser user = userService.getUser(principal.getName());
+
+        questionService.addLikes(question, user);
+        return "redirect:/question/detail/" + id;
+    }
+
 
 
 
