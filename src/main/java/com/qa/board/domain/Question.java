@@ -52,4 +52,9 @@ public class Question {
         this.content = content;
         this.author = author;
     }
+
+    public void edit(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

@@ -3,20 +3,25 @@ package com.qa.board.controller;
 import com.qa.board.domain.Question;
 import com.qa.board.domain.SiteUser;
 import com.qa.board.form.AnswerForm;
+import com.qa.board.form.QuestionEdit;
 import com.qa.board.form.QuestionForm;
 import com.qa.board.service.QuestionService;
 import com.qa.board.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -58,6 +63,37 @@ public class QuestionController {
         questionService.createQuestion(questionForm.getTitle(), questionForm.getContent(), user);
         return "redirect:/";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable Long id, Principal principal) {
+        Question question = questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        model.addAttribute("questionForm", new QuestionEdit(
+                question.getTitle(),
+                question.getContent()
+        ));
+        return "questionForm";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/edit/{id}")
+    public String edit(@Valid @ModelAttribute("questionForm") QuestionEdit questionEdit, BindingResult bindingResult,
+                       @PathVariable Long id, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "questionForm";
+        }
+        Question question = questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        questionService.edit(question, questionEdit);
+        return "redirect:/question/detail/" + id;
+    }
+
+
 
 
 }

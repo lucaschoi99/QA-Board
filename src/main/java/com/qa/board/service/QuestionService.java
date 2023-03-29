@@ -3,6 +3,7 @@ package com.qa.board.service;
 import com.qa.board.domain.Question;
 import com.qa.board.domain.SiteUser;
 import com.qa.board.exception.DataNotFoundException;
+import com.qa.board.form.QuestionEdit;
 import com.qa.board.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,4 +38,8 @@ public class QuestionService {
                 .build());
     }
 
+    public void edit(Question question, QuestionEdit questionEdit) {
+        question.edit(questionEdit.getTitle(), questionEdit.getContent());
+        questionRepository.save(question);
+    }
 }
