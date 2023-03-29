@@ -25,6 +25,10 @@
                 </div>
             </div>
             <div class="my-3">
+                <a th:href="@{|/question/likes/${question.id}|}" class="recommend btn btn-sm btn-outline-secondary">
+                    좋아요
+                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.questionLikes)}"></span>
+                </a>
                 <a th:href="@{|/question/edit/${question.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
