@@ -27,7 +27,7 @@ public class QuestionService {
 
     public Question getQuestion(Long id) {
         return questionRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 질문입니다"));
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 질문입니다."));
     }
 
     public void createQuestion(String title, String content, SiteUser author) {
@@ -41,5 +41,9 @@ public class QuestionService {
     public void edit(Question question, QuestionEdit questionEdit) {
         question.edit(questionEdit.getTitle(), questionEdit.getContent());
         questionRepository.save(question);
+    }
+
+    public void delete(Question question) {
+        questionRepository.delete(question);
     }
 }
