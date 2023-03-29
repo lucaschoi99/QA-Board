@@ -45,4 +45,8 @@ public class Answer {
         this.content = content;
         this.author = author;
     }
+
+    public void edit(String content) {
+        this.content = content;
+    }
 }

@@ -1,5 +1,6 @@
 package com.qa.board.controller;
 
+import com.qa.board.domain.Answer;
 import com.qa.board.domain.Question;
 import com.qa.board.domain.SiteUser;
 import com.qa.board.form.AnswerForm;
@@ -12,14 +13,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/answer")
 public class AnswerController {
 
     private final QuestionService questionService;
@@ -27,7 +30,7 @@ public class AnswerController {
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/answer/create/{id}")
+    @PostMapping("/create/{id}")
     public String createAnswer(Model model, @PathVariable Long id,
                                @Valid AnswerForm answerForm, BindingResult bindingResult,
                                Principal principal) {
@@ -40,4 +43,44 @@ public class AnswerController {
         answerService.create(question, answerForm.getContent(), user);
         return "redirect:/question/detail/" + id;
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/edit/{id}")
+    public String edit(AnswerForm answerForm, @PathVariable Long id, Principal principal) {
+        Answer answer = answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        answerForm.setContent(answer.getContent());
+        return "answerForm";
+    }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/edit/{id}")
+    public String edit(@Valid AnswerForm answerForm, BindingResult bindingResult,
+                       @PathVariable Long id, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "answerForm";
+        }
+        Answer answer = answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        answerService.edit(answer, answerForm);
+        return "redirect:/question/detail/" + answer.getQuestion().getId();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String delete(Principal principal, @PathVariable Long id) {
+        Answer answer = answerService.getAnswer(id);
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(BAD_REQUEST, "삭제 권한이 없습니다.");
+        }
+        answerService.delete(answer);
+        return "redirect:/question/detail/" + answer.getQuestion().getId();
+    }
+
+
 }
