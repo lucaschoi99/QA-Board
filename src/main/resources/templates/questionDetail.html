@@ -19,6 +19,10 @@
                    sec:authorize="isAuthenticated()"
                    th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
                    th:text="수정"></a>
+                <a onclick="return confirm('정말로 삭제하시겠습니까?');" th:href="@{|/question/delete/${question.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+                   th:text="삭제"></a>
             </div>
         </div>
     </div>
@@ -42,6 +46,16 @@
                     </div>
                     <div th:text="${#temporals.format(answer.createdDate, 'M/d HH:mm')}"></div>
                 </div>
+            </div>
+            <div class="my-3">
+                <a th:href="@{|/answer/edit/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                   th:text="수정"></a>
+                <a onclick="return confirm('정말로 삭제하시겠습니까?');" th:href="@{|/answer/delete/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                   th:text="삭제"></a>
             </div>
         </div>
     </div>
