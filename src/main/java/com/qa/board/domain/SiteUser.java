@@ -36,10 +36,10 @@ public class SiteUser {
     @OneToMany(mappedBy = "author", cascade = ALL)
     private List<Answer> answers;
 
-    @OneToMany(mappedBy = "likesUser")
+    @OneToMany(mappedBy = "user")
     private Set<QuestionLikes> userLikesQuestion;
 
-    @OneToMany(mappedBy = "likesUser")
+    @OneToMany(mappedBy = "user")
     private Set<AnswerLikes> userLikesAnswer;
 
     @Builder
@@ -49,9 +49,14 @@ public class SiteUser {
         this.email = email;
     }
 
-    // 연관관계 메서드
+    //==연관관계 메서드==//
     public void addQuestionLikes(QuestionLikes questionLikes) {
         this.userLikesQuestion.add(questionLikes);
-        questionLikes.setLikesUser(this);
+        questionLikes.setUser(this);
+    }
+
+    public void addAnswerLikes(AnswerLikes answerLikes) {
+        this.userLikesAnswer.add(answerLikes);
+        answerLikes.setUser(this);
     }
 }

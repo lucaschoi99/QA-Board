@@ -1,19 +1,20 @@
 package com.qa.board.service;
 
-import com.qa.board.domain.Answer;
-import com.qa.board.domain.Question;
-import com.qa.board.domain.SiteUser;
+import com.qa.board.domain.*;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.AnswerForm;
 import com.qa.board.repository.AnswerRepository;
+import com.qa.board.repository.AnswerUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
+    private final AnswerUserRepository answerUserRepository;
 
     public void create(Question question, String content, SiteUser author) {
         answerRepository.save(Answer.builder()
@@ -35,5 +36,11 @@ public class AnswerService {
 
     public void delete(Answer answer) {
         answerRepository.delete(answer);
+    }
+
+    @Transactional
+    public void addLikes(Answer answer, SiteUser user) {
+        AnswerLikes answerLikes = AnswerLikes.create(answer, user);
+        answerUserRepository.save(answerLikes);
     }
 }

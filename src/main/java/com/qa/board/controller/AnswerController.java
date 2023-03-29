@@ -82,5 +82,13 @@ public class AnswerController {
         return "redirect:/question/detail/" + answer.getQuestion().getId();
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/likes/{id}")
+    public String answerLikes(Principal principal, @PathVariable Long id) {
+        Answer answer = answerService.getAnswer(id);
+        SiteUser user = userService.getUser(principal.getName());
+        answerService.addLikes(answer, user);
+        return "redirect:/question/detail/" + answer.getQuestion().getId();
+    }
 
 }
