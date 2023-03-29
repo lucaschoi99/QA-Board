@@ -10,7 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -40,6 +42,9 @@ public class Question {
     @ManyToOne
     private SiteUser author;
 
+    @OneToMany(mappedBy = "likesQuestion")
+    private Set<QuestionLikes> questionLikes = new LinkedHashSet<>();
+
     @CreatedDate
     private LocalDateTime createdDate;
 
@@ -56,5 +61,11 @@ public class Question {
     public void edit(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    // 연관관계 메서드
+    public void addLikes(QuestionLikes questionLikes) {
+        this.questionLikes.add(questionLikes);
+        questionLikes.setLikesQuestion(this);
     }
 }
