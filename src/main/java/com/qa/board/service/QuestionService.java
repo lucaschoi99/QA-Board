@@ -68,6 +68,7 @@ public class QuestionService {
                         .or(qQuestion.content.containsIgnoreCase(keyword))
                         .or(qQuestion.author.username.containsIgnoreCase(keyword))
                 )
+                .orderBy(qQuestion.createdDate.desc())
                 .fetch();
 
         int start = (int) pageable.getOffset();
