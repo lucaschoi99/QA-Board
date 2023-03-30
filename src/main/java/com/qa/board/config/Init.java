@@ -24,12 +24,20 @@ public class Init {
                                       UserRepository userRepository) {
         return args -> {
             // 이 부분은 스프링부트 앱이 실행되고, 본격적으로 작동하기 전에 실행된다.
+            String encodedPassword = passwordEncoder.encode("111");
+
+            SiteUser initUser = SiteUser.builder()
+                    .username("운영자")
+                    .password(encodedPassword)
+                    .email("admin@gmail.com")
+                    .build();
+            userRepository.save(initUser);
+
             for (int i = 1; i <= 300; i++) {
                 String title = "[제목] - " + i;
                 String content = "[내용] - " + i;
-                questionService.createQuestion(title, content, null);
+                questionService.createQuestion(title, content, initUser);
             }
-            String encodedPassword = passwordEncoder.encode("111");
 
             SiteUser user = SiteUser.builder()
                     .username("bin")
