@@ -28,7 +28,7 @@ public class Question {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "question", cascade = REMOVE)
+    @OneToMany(mappedBy = "question", cascade = ALL)
     private List<Answer> answerList;
 
     @Column(length = 200)
@@ -42,7 +42,7 @@ public class Question {
     @ManyToOne
     private SiteUser author;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = ALL)
     private Set<QuestionLikes> questionLikes = new LinkedHashSet<>();
 
     @CreatedDate

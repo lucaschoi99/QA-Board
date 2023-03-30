@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.*;
 
 @Entity
@@ -35,7 +36,7 @@ public class Answer {
     @ManyToOne
     private SiteUser author;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", cascade = ALL)
     private Set<AnswerLikes> answerLikes = new LinkedHashSet<>();
 
     @CreatedDate

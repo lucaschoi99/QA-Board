@@ -36,10 +36,10 @@ public class SiteUser {
     @OneToMany(mappedBy = "author", cascade = ALL)
     private List<Answer> answers;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = ALL)
     private Set<QuestionLikes> userLikesQuestion;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = ALL)
     private Set<AnswerLikes> userLikesAnswer;
 
     @Builder
