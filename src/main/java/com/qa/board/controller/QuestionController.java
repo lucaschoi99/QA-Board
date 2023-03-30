@@ -10,7 +10,6 @@ import com.qa.board.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.util.List;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,10 +30,12 @@ public class QuestionController {
     private final UserService userService;
 
     @GetMapping("/list")
-    public String getList(Model model, @RequestParam(defaultValue = "0") int page) {
+    public String getList(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+                          @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         int pageSize = 10;
-        Page<Question> paged = questionService.findQuestions(page, pageSize);
+        Page<Question> paged = questionService.findQuestions(page, pageSize, keyword);
         model.addAttribute("paged", paged);
+        model.addAttribute("keyword", keyword);
         return "questionList";
     }
 

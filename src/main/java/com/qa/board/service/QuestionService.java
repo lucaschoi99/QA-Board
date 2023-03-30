@@ -1,5 +1,6 @@
 package com.qa.board.service;
 
+import com.qa.board.domain.QQuestion;
 import com.qa.board.domain.Question;
 import com.qa.board.domain.QuestionLikes;
 import com.qa.board.domain.SiteUser;
@@ -7,14 +8,14 @@ import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.QuestionEdit;
 import com.qa.board.repository.QuestionRepository;
 import com.qa.board.repository.QuestionUserRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +24,11 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionUserRepository questionUserRepository;
+    private final EntityManager em;
 
-    public Page<Question> findQuestions(int page, int pageSize) {
+    public Page<Question> findQuestions(int page, int pageSize, String keyword) {
         PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Order.desc("createdDate")));
-        return questionRepository.findAll(pageable);
+        return search(keyword, pageable);
     }
 
     public Question getQuestion(Long id) {
@@ -56,4 +58,22 @@ public class QuestionService {
         QuestionLikes questionLikes = QuestionLikes.create(question, user);
         questionUserRepository.save(questionLikes);
     }
+
+    public Page<Question> search(String keyword, Pageable pageable) {
+        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(em);
+        QQuestion qQuestion = QQuestion.question;
+
+        List<Question> searched = jpaQueryFactory.selectFrom(qQuestion)
+                .where(qQuestion.title.containsIgnoreCase(keyword)
+                        .or(qQuestion.content.containsIgnoreCase(keyword))
+                        .or(qQuestion.author.username.containsIgnoreCase(keyword))
+                )
+                .fetch();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), searched.size());
+
+        return new PageImpl<>(searched.subList(start, end), pageable, searched.size());
+    }
+
 }
