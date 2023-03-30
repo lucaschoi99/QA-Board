@@ -40,8 +40,8 @@ public class AnswerController {
             return "questionDetail";
         }
         SiteUser user = userService.getUser(principal.getName());
-        answerService.create(question, answerForm.getContent(), user);
-        return "redirect:/question/detail/" + id;
+        Answer answer = answerService.create(question, answerForm.getContent(), user);
+        return "redirect:/question/detail/" + id + "#answer_" + answer.getId();
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -68,7 +68,8 @@ public class AnswerController {
             throw new ResponseStatusException(BAD_REQUEST, "수정 권한이 없습니다.");
         }
         answerService.edit(answer, answerForm);
-        return "redirect:/question/detail/" + answer.getQuestion().getId();
+        return "redirect:/question/detail/" + answer.getQuestion().getId()
+                + "#answer_" + answer.getId();
     }
 
     @PreAuthorize("isAuthenticated()")
