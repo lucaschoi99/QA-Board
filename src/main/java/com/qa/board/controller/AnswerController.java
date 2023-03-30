@@ -89,7 +89,8 @@ public class AnswerController {
         Answer answer = answerService.getAnswer(id);
         SiteUser user = userService.getUser(principal.getName());
         answerService.addLikes(answer, user);
-        return "redirect:/question/detail/" + answer.getQuestion().getId();
+        return "redirect:/question/detail/" + answer.getQuestion().getId()
+                + "#answer_" + answer.getId();
     }
 
 }
