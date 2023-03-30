@@ -1,7 +1,17 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
     <h2>질문 게시판</h2>
-
+    <div class="row my-3">
+        <div class="col-6">
+            <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+        </div>
+        <div class="col-6">
+            <div class="input-group">
+                <input type="text" id="search_kw" class="form-control" th:value="${keyword}">
+                <button class="btn btn-outline-secondary" type="button" id="btn_search">검색</button>
+            </div>
+        </div>
+    </div>
     <table class="table">
         <thead class="table-dark">
         <tr>
@@ -35,10 +45,10 @@
     <!-- 페이징처리 시작 -->
     <div th:if="${!paged.isEmpty()}">
         <ul class="pagination justify-content-center">
-            <li th:if="${paged.hasPrevious()}"><a class="page-link" th:href="@{|?page=0|}">처음</a></li>
+            <li th:if="${paged.hasPrevious()}"><a class="page-link" th:href="@{|?page=0&keyword=${keyword}|}">처음</a></li>
             <li class="page-item" th:classappend="${!paged.hasPrevious} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|?page=${paged.number-1}|}">
+                   th:href="@{|?page=${paged.number-1}&keyword=${keyword}|}">
                     <span>이전</span>
                 </a>
             </li>
@@ -46,17 +56,30 @@
                 th:class="${page == paged.number} ? active : ''"
                 class="page-item">
                 <a th:if="${page >= 0 and page < paged.totalPages}"
-                   th:href="@{|?page=${page}|}" th:text="${page}" class="page-link"></a>
+                   th:href="@{|?page=${page}&keyword=${keyword}|}" th:text="${page}" class="page-link"></a>
             </li>
             <li class="page-item" th:classappend="${!paged.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{|?page=${paged.number+1}|}">
+                <a class="page-link" th:href="@{|?page=${paged.number+1}&keyword=${keyword}|}">
                     <span>다음</span>
                 </a>
             </li>
-            <li th:if="${paged.hasNext()}"><a class="page-link" th:href="@{|?page=${paged.totalPages - 1}|}">마지막</a></li>
+            <li th:if="${paged.hasNext()}"><a class="page-link" th:href="@{|?page=${paged.totalPages - 1}&keyword=${keyword}|}">마지막</a></li>
         </ul>
     </div>
     <!-- 페이징처리 끝 -->
-    <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+    <form th:action="@{/question/list}" method="get" id="searchForm">
+        <input type="hidden" id="keyword" name="keyword" th:value="${keyword}">
+        <input type="hidden" id="page" name="page" th:value="${paged.number}">
+    </form>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+    const btn_search = document.getElementById("btn_search");
+    console.log("Found Button!");
+    btn_search.addEventListener('click', function() {
+        console.log("button clicked!");
+        document.getElementById('keyword').value = document.getElementById('search_kw').value;
+        document.getElementById('page').value = 0;  // 검색버튼을 클릭할 경우 0페이지부터 조회한다.
+        document.getElementById('searchForm').submit();
+    });
+</script>
 </html>
