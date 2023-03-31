@@ -42,6 +42,9 @@ public class SiteUser {
     @OneToMany(mappedBy = "user", cascade = ALL)
     private Set<AnswerLikes> userLikesAnswer;
 
+    @OneToMany(mappedBy = "userCount", cascade = ALL)
+    private Set<QuestionCount> userCounts;
+
     @Builder
     public SiteUser(String username, String password, String email) {
         this.username = username;
@@ -58,5 +61,10 @@ public class SiteUser {
     public void addAnswerLikes(AnswerLikes answerLikes) {
         this.userLikesAnswer.add(answerLikes);
         answerLikes.setUser(this);
+    }
+
+    public void addCount(QuestionCount questionCount) {
+        this.userCounts.add(questionCount);
+        questionCount.setUserCount(this);
     }
 }

@@ -1,13 +1,12 @@
 package com.qa.board.service;
 
-import com.qa.board.domain.QQuestion;
-import com.qa.board.domain.Question;
-import com.qa.board.domain.QuestionLikes;
-import com.qa.board.domain.SiteUser;
+import com.qa.board.domain.*;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.QuestionEdit;
+import com.qa.board.repository.QuestionCountRepository;
 import com.qa.board.repository.QuestionRepository;
 import com.qa.board.repository.QuestionUserRepository;
+import com.qa.board.repository.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,8 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionUserRepository questionUserRepository;
+    private final QuestionCountRepository questionCountRepository;
+    private final UserRepository userRepository;
     private final EntityManager em;
 
     public Page<Question> findQuestions(int page, int pageSize, String keyword) {
@@ -61,6 +62,15 @@ public class QuestionService {
             questionUserRepository.save(questionLikes);
         } else {
             questionUserRepository.delete(found);
+        }
+    }
+    @Transactional
+    public void addCounts(Question question, String username) {
+        SiteUser user = userRepository.findByUsername(username)
+                .orElse(null);
+        if (questionCountRepository.findByQuestionCountAndUserCount(question, user) == null) {
+            QuestionCount questionCount = QuestionCount.create(question, user);
+            questionCountRepository.save(questionCount);
         }
     }
 

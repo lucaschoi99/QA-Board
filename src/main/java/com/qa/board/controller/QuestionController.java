@@ -41,8 +41,12 @@ public class QuestionController {
 
     @GetMapping("/detail/{id}")
     public String details(Model model, @PathVariable Long id,
-                          AnswerForm answerForm) {
+                          AnswerForm answerForm, Principal principal) {
         Question question = questionService.getQuestion(id);
+
+        if (principal != null) {
+            questionService.addCounts(question, principal.getName());
+        }
         model.addAttribute("question", question);
         return "questionDetail";
     }

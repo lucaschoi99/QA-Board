@@ -43,7 +43,10 @@ public class Question {
     private SiteUser author;
 
     @OneToMany(mappedBy = "question", cascade = ALL)
-    private Set<QuestionLikes> questionLikes = new LinkedHashSet<>();
+    private Set<QuestionLikes> questionLikes;
+
+    @OneToMany(mappedBy = "questionCount", cascade = ALL)
+    private Set<QuestionCount> questionCounts;
 
     @CreatedDate
     private LocalDateTime createdDate;
@@ -67,5 +70,10 @@ public class Question {
     public void addLikes(QuestionLikes questionLikes) {
         this.questionLikes.add(questionLikes);
         questionLikes.setQuestion(this);
+    }
+
+    public void addCount(QuestionCount questionCount) {
+        this.questionCounts.add(questionCount);
+        questionCount.setQuestionCount(this);
     }
 }
