@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -40,7 +42,12 @@ public class AnswerService {
 
     @Transactional
     public void addLikes(Answer answer, SiteUser user) {
-        AnswerLikes answerLikes = AnswerLikes.create(answer, user);
-        answerUserRepository.save(answerLikes);
+        AnswerLikes isExists = answerUserRepository.findByAnswerAndUser(answer, user);
+        if (isExists == null) {
+            AnswerLikes answerLikes = AnswerLikes.create(answer, user);
+            answerUserRepository.save(answerLikes);
+        } else {
+            answerUserRepository.delete(isExists);
+        }
     }
 }

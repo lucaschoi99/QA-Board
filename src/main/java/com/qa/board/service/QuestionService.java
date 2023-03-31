@@ -55,8 +55,13 @@ public class QuestionService {
 
     @Transactional
     public void addLikes(Question question, SiteUser user) {
-        QuestionLikes questionLikes = QuestionLikes.create(question, user);
-        questionUserRepository.save(questionLikes);
+        QuestionLikes found = questionUserRepository.findByQuestionAndUser(question, user);
+        if (found == null) {
+            QuestionLikes questionLikes = QuestionLikes.create(question, user);
+            questionUserRepository.save(questionLikes);
+        } else {
+            questionUserRepository.delete(found);
+        }
     }
 
     public Page<Question> search(String keyword, Pageable pageable) {
