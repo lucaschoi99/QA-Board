@@ -1,0 +1,16 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <tr th:each="items : ${questions}">
+        <li th:text="${items.getMessage()}"></li>
+        <span class="text-danger small ms-4"
+              th:text="${#temporals.format(items.getTime(), 'M/d HH:mm')}">
+        </span>
+    </tr>
+    <tr th:each="items : ${answers}">
+        <li th:text="${items.getMessage()}"></li>
+        <span class="text-danger small ms-4"
+              th:text="${#temporals.format(items.getTime(), 'M/d HH:mm')}">
+        </span>
+    </tr>
+</div>
+</html>

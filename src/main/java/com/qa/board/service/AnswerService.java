@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.time.LocalDateTime.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +34,7 @@ public class AnswerService {
         SiteUser user = userRepository.findByUsername(commentedUserName)
                 .orElseThrow(IllegalAccessError::new);
         if (user != question.getAuthor()) {
-            QuestionAlert alert = QuestionAlert.alertAuthor(user, question.getAuthor(), question.getTitle());
+            QuestionAlert alert = QuestionAlert.alertAuthor(user, question.getAuthor(), question.getTitle(), now());
             questionAlertRepository.save(alert);
         }
         return answer;
@@ -60,7 +63,7 @@ public class AnswerService {
 
             // 좋아요 알림
             if (user != answer.getAuthor()) {
-                AnswerAlert alert = AnswerAlert.createMessage(user, answer.getAuthor(), answer.getContent());
+                AnswerAlert alert = AnswerAlert.createMessage(user, answer.getAuthor(), answer.getContent(), now());
                 answerAlertRepository.save(alert);
             }
         } else {

@@ -12,7 +12,10 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.time.LocalDateTime.*;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +64,7 @@ public class QuestionService {
 
             // 좋아요 알림
             if (user != question.getAuthor()) {
-                QuestionAlert alert = QuestionAlert.createMessage(user, question.getAuthor(), question.getTitle());
+                QuestionAlert alert = QuestionAlert.createMessage(user, question.getAuthor(), question.getTitle(), now());
                 questionAlertRepository.save(alert);
             }
         } else {

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -27,21 +29,23 @@ public class QuestionAlert {
 
     private String message;
 
-    public static QuestionAlert createMessage(SiteUser likes, SiteUser liked, String title) {
+    private LocalDateTime time;
+
+    public static QuestionAlert createMessage(SiteUser likes, SiteUser liked, String title, LocalDateTime time) {
         QuestionAlert questionAlert = new QuestionAlert();
         liked.addAlert(questionAlert);
-        String created = likes.getUsername() + "님이 " + questionAlert.user.getUsername() + "님의 " + title + " 질문 글을 좋아합니다.❣️";
+        String created = likes.getUsername() + "님이 " + questionAlert.user.getUsername() + "님의 " + title + " 글을 좋아합니다.❣️";
         questionAlert.setMessage(created);
-
+        questionAlert.setTime(time);
         return questionAlert;
     }
 
-    public static QuestionAlert alertAuthor(SiteUser commented, SiteUser author, String title) {
+    public static QuestionAlert alertAuthor(SiteUser commented, SiteUser author, String title, LocalDateTime time) {
         QuestionAlert questionAlert = new QuestionAlert();
         author.addAlert(questionAlert);
         String alert = commented.getUsername() + "님이 " + questionAlert.user.getUsername() + "님의 " + title + " 글에 답변을 남기셨습니다.";
         questionAlert.setMessage(alert);
-
+        questionAlert.setTime(time);
         return questionAlert;
     }
 

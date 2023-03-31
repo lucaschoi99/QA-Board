@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -27,12 +29,14 @@ public class AnswerAlert {
 
     private String message;
 
-    public static AnswerAlert createMessage(SiteUser likes, SiteUser liked, String comment) {
+    private LocalDateTime time;
+
+    public static AnswerAlert createMessage(SiteUser likes, SiteUser liked, String comment, LocalDateTime time) {
         AnswerAlert answerAlert = new AnswerAlert();
         liked.addAnswerAlert(answerAlert);
         String created = likes.getUsername() + "님이 " + answerAlert.user.getUsername() + "님의 " + comment + " 답변을 좋아합니다.❣️";
         answerAlert.setMessage(created);
-
+        answerAlert.setTime(time);
         return answerAlert;
     }
 
