@@ -3,10 +3,7 @@ package com.qa.board.service;
 import com.qa.board.domain.*;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.QuestionEdit;
-import com.qa.board.repository.QuestionCountRepository;
-import com.qa.board.repository.QuestionRepository;
-import com.qa.board.repository.QuestionUserRepository;
-import com.qa.board.repository.UserRepository;
+import com.qa.board.repository.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final QuestionUserRepository questionUserRepository;
     private final QuestionCountRepository questionCountRepository;
+    private final QuestionAlertRepository questionAlertRepository;
     private final UserRepository userRepository;
     private final EntityManager em;
 
@@ -60,10 +58,17 @@ public class QuestionService {
         if (found == null) {
             QuestionLikes questionLikes = QuestionLikes.create(question, user);
             questionUserRepository.save(questionLikes);
+
+            // 좋아요 알림
+            if (user != question.getAuthor()) {
+                QuestionAlert alert = QuestionAlert.createMessage(user, question.getAuthor(), question.getTitle());
+                questionAlertRepository.save(alert);
+            }
         } else {
             questionUserRepository.delete(found);
         }
     }
+
     @Transactional
     public void addCounts(Question question, String username) {
         SiteUser user = userRepository.findByUsername(username)
@@ -73,6 +78,7 @@ public class QuestionService {
             questionCountRepository.save(questionCount);
         }
     }
+
 
     public Page<Question> search(String keyword, Pageable pageable) {
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(em);

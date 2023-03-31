@@ -45,6 +45,9 @@ public class SiteUser {
     @OneToMany(mappedBy = "userCount", cascade = ALL)
     private Set<QuestionCount> userCounts;
 
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<QuestionAlert> questionAlert;
+
     @Builder
     public SiteUser(String username, String password, String email) {
         this.username = username;
@@ -66,5 +69,10 @@ public class SiteUser {
     public void addCount(QuestionCount questionCount) {
         this.userCounts.add(questionCount);
         questionCount.setUserCount(this);
+    }
+
+    public void addAlert(QuestionAlert questionAlert) {
+        this.questionAlert.add(questionAlert);
+        questionAlert.setUser(this);
     }
 }
