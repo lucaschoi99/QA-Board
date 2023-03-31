@@ -3,10 +3,7 @@ package com.qa.board.service;
 import com.qa.board.domain.*;
 import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.AnswerForm;
-import com.qa.board.repository.AnswerRepository;
-import com.qa.board.repository.AnswerUserRepository;
-import com.qa.board.repository.QuestionAlertRepository;
-import com.qa.board.repository.UserRepository;
+import com.qa.board.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +18,7 @@ public class AnswerService {
     private final AnswerUserRepository answerUserRepository;
     private final UserRepository userRepository;
     private final QuestionAlertRepository questionAlertRepository;
+    private final AnswerAlertRepository answerAlertRepository;
 
     public Answer create(Question question, String content, SiteUser author, String commentedUserName) {
         Answer answer = answerRepository.save(Answer.builder()
@@ -59,6 +57,12 @@ public class AnswerService {
         if (isExists == null) {
             AnswerLikes answerLikes = AnswerLikes.create(answer, user);
             answerUserRepository.save(answerLikes);
+
+            // 좋아요 알림
+            if (user != answer.getAuthor()) {
+                AnswerAlert alert = AnswerAlert.createMessage(user, answer.getAuthor(), answer.getContent());
+                answerAlertRepository.save(alert);
+            }
         } else {
             answerUserRepository.delete(isExists);
         }

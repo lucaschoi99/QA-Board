@@ -1,5 +1,6 @@
 package com.qa.board.domain;
 
+import com.fasterxml.classmate.AnnotationOverrides;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,9 @@ public class SiteUser {
     @OneToMany(mappedBy = "user", cascade = ALL)
     private List<QuestionAlert> questionAlert;
 
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<AnswerAlert> answerAlert;
+
     @Builder
     public SiteUser(String username, String password, String email) {
         this.username = username;
@@ -74,5 +78,10 @@ public class SiteUser {
     public void addAlert(QuestionAlert questionAlert) {
         this.questionAlert.add(questionAlert);
         questionAlert.setUser(this);
+    }
+
+    public void addAnswerAlert(AnswerAlert answerAlert) {
+        this.answerAlert.add(answerAlert);
+        answerAlert.setUser(this);
     }
 }
