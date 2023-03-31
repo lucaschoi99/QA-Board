@@ -1,6 +1,32 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
 
+    <h1 class="border-bottom py-2" th:text="@{|프로필 정보|}"></h1>
+    <h6 class="border-bottom py-2" th:text="@{|이름: ${user.username}|}"></h6>
+    <h6 class="border-bottom py-2" th:text="@{|이메일 주소: ${user.email}|}"></h6>
+    <br/><br/><br/>
+
+    <h1 class="border-bottom py-2" th:text="@{|내가 작성한 글|}"></h1>
+    <tr th:each="items : ${user.questions}">
+        <li>
+            <a th:href="@{|/question/detail/${items.id}|}" th:text="${items.getTitle}"></a>
+            <span class="text-danger small ms-4"
+                  th:text="${#temporals.format(items.createdDate, 'M/d HH:mm')}">
+            </span>
+        </li>
+    </tr>
+
+    <br/><br/><br/>
+
+    <h1 class="border-bottom py-2" th:text="@{|내가 작성한 답변|}"></h1>
+    <tr th:each="items : ${user.answers}">
+        <li>
+            <a th:href="@{|/question/detail/${items.getQuestion.getId}#answer_${items.getId}|}" th:text="${items.getContent}"></a>
+            <span class="text-danger small ms-4"
+                  th:text="${#temporals.format(items.createdDate, 'M/d HH:mm')}">
+            </span>
+        </li>
+    </tr>
 
 </div>
 </html>

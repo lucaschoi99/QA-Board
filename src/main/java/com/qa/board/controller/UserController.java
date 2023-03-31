@@ -84,8 +84,8 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String myPage(Model model, Principal principal) {
-
-
+        SiteUser myUser = userService.getUser(principal.getName());
+        model.addAttribute("user", myUser);
         return "myPage";
     }
 }
