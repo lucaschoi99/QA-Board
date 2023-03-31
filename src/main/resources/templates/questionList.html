@@ -19,6 +19,7 @@
             <th style="width:50%">제목</th>
             <th>작성자</th>
             <th>작성일시</th>
+            <th>조회수</th>
         </tr>
         </thead>
         <tbody>
@@ -36,6 +37,7 @@
                 <span th:unless="${question.author != null}" th:text="알수없음"></span>
             </td>
             <td th:text="${#temporals.format(question.createdDate, 'yyyy/M/d HH:mm')}"></td>
+            <td th:text="${#lists.size(question.questionCounts)}"></td>
         </tr>
         <tr th:if="${#lists.isEmpty(paged)}">
             <td colspan="2">등록된 질문이 없어요 🤨</td>
