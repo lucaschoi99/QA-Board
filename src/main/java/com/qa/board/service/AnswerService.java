@@ -5,6 +5,8 @@ import com.qa.board.exception.DataNotFoundException;
 import com.qa.board.form.AnswerForm;
 import com.qa.board.repository.AnswerRepository;
 import com.qa.board.repository.AnswerUserRepository;
+import com.qa.board.repository.QuestionAlertRepository;
+import com.qa.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +19,24 @@ public class AnswerService {
 
     private final AnswerRepository answerRepository;
     private final AnswerUserRepository answerUserRepository;
+    private final UserRepository userRepository;
+    private final QuestionAlertRepository questionAlertRepository;
 
-    public Answer create(Question question, String content, SiteUser author) {
-        return answerRepository.save(Answer.builder()
+    public Answer create(Question question, String content, SiteUser author, String commentedUserName) {
+        Answer answer = answerRepository.save(Answer.builder()
                 .question(question)
                 .content(content)
                 .author(author)
                 .build());
+
+        // 질문글에 답변이 달렸음을 알림
+        SiteUser user = userRepository.findByUsername(commentedUserName)
+                .orElseThrow(IllegalAccessError::new);
+        if (user != question.getAuthor()) {
+            QuestionAlert alert = QuestionAlert.alertAuthor(user, question.getAuthor(), question.getTitle());
+            questionAlertRepository.save(alert);
+        }
+        return answer;
     }
 
     public Answer getAnswer(Long id) {

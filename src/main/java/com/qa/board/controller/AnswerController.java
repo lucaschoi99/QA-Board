@@ -40,7 +40,7 @@ public class AnswerController {
             return "questionDetail";
         }
         SiteUser user = userService.getUser(principal.getName());
-        Answer answer = answerService.create(question, answerForm.getContent(), user);
+        Answer answer = answerService.create(question, answerForm.getContent(), user, principal.getName());
         return "redirect:/question/detail/" + id + "#answer_" + answer.getId();
     }
 

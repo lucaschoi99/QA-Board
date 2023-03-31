@@ -36,6 +36,15 @@ public class QuestionAlert {
         return questionAlert;
     }
 
+    public static QuestionAlert alertAuthor(SiteUser commented, SiteUser author, String title) {
+        QuestionAlert questionAlert = new QuestionAlert();
+        author.addAlert(questionAlert);
+        String alert = commented.getUsername() + "님이 " + questionAlert.user.getUsername() + "님의 " + title + " 글에 답변을 남기셨습니다.";
+        questionAlert.setMessage(alert);
+
+        return questionAlert;
+    }
+
 
 
 }
